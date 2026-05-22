@@ -1,0 +1,10 @@
+# Node dependency directory
+node_modules/
+
+# Local database and data logs
+data/
+*.log
+
+# Operating System files
+.DS_Store
+Thumbs.db

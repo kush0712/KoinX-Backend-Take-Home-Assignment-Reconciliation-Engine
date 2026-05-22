@@ -1,0 +1,28 @@
+{
+  "name": "koinx-reconciliation-engine",
+  "version": "1.0.0",
+  "description": "KoinX Backend Take-Home Assignment - Transaction Reconciliation Engine",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node tests/runner.js"
+  },
+  "keywords": [
+    "koinx",
+    "reconciliation",
+    "crypto",
+    "matching-engine"
+  ],
+  "author": "Kushagra Jaiswal",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  }
+}
