@@ -11,6 +11,7 @@ if (express) {
   const router = express.Router();
 
   // Route declarations
+  router.get('/', controller.getRoot); // Beautiful root landing page
   router.post('/reconcile', controller.reconcile);
   router.get('/reconcile', controller.reconcile); // GET fallback for easy browser testing
   router.get('/report/:runId', controller.getReport);
@@ -21,6 +22,7 @@ if (express) {
 } else {
   // Pure JS mock routing mapping metadata for in-memory testing
   module.exports = [
+    { method: 'GET', path: '/', handler: controller.getRoot },
     { method: 'POST', path: '/reconcile', handler: controller.reconcile },
     { method: 'GET', path: '/reconcile', handler: controller.reconcile },
     { method: 'GET', path: '/report/:runId', handler: controller.getReport },

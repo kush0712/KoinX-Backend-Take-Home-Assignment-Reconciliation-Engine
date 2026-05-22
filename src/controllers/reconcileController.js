@@ -220,9 +220,305 @@ async function getUnmatched(req, res) {
   }
 }
 
+/**
+ * Serve a beautiful welcome landing page for the root endpoint (GET /)
+ */
+function getRoot(req, res) {
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KoinX Reconciliation Engine | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090b11;
+      --card: #131722;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border: #374151;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background-image: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(19, 23, 34, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      background: rgba(79, 70, 229, 0.15);
+      color: #818cf8;
+      border: 1px solid rgba(79, 70, 229, 0.3);
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, #ffffff, #9ca3af);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    p.lead {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+
+    .btn {
+      font-family: inherit;
+      background-color: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .endpoints {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 2rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+    }
+
+    .endpoint-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.2s ease;
+    }
+
+    .endpoint-card:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .method {
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      margin-right: 1rem;
+      min-width: 65px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .method.post {
+      background: rgba(79, 70, 229, 0.15);
+      color: #818cf8;
+      border: 1px solid rgba(79, 70, 229, 0.3);
+    }
+
+    .method.get {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .route-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .route-path {
+      font-family: monospace;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .action-link {
+      color: #818cf8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s ease;
+    }
+
+    .action-link:hover {
+      color: #a5b4fc;
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: #818cf8;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">KoinX Take-Home Assignment</span>
+      <h1>Reconciliation Engine Dashboard</h1>
+      <p class="lead">An institutional-grade, multi-phase matching and reconciliation API designed for crypto transaction histories.</p>
+    </header>
+
+    <div class="btn-container">
+      <button class="btn" onclick="window.location.href='/reconcile'">🚀 Run Reconciliation Engine</button>
+    </div>
+
+    <div class="endpoints">
+      <h2>Interactive REST Endpoints</h2>
+      
+      <div class="endpoint-card">
+        <div>
+          <div class="route-info">
+            <span class="method get">GET</span>
+            <span class="route-path">/reconcile</span>
+          </div>
+          <div class="desc">Triggers/runs matching engine & saves report to database. (Click below to test instantly!)</div>
+        </div>
+        <a class="action-link" href="/reconcile">Run now &rarr;</a>
+      </div>
+
+      <div class="endpoint-card">
+        <div>
+          <div class="route-info">
+            <span class="method get">GET</span>
+            <span class="route-path">/report/:runId</span>
+          </div>
+          <div class="desc">Streams downloadable CSV report mapping categories & details.</div>
+        </div>
+        <span class="desc">CSV Download</span>
+      </div>
+
+      <div class="endpoint-card">
+        <div>
+          <div class="route-info">
+            <span class="method get">GET</span>
+            <span class="route-path">/report/:runId/summary</span>
+          </div>
+          <div class="desc">Fetches JSON containing counts (matched, conflicting, unmatched).</div>
+        </div>
+        <span class="desc">JSON Summary</span>
+      </div>
+
+      <div class="endpoint-card">
+        <div>
+          <div class="route-info">
+            <span class="method get">GET</span>
+            <span class="route-path">/report/:runId/unmatched</span>
+          </div>
+          <div class="desc">Retrieves detailed JSON of all unmatched transactions with reasons.</div>
+        </div>
+        <span class="desc">JSON List</span>
+      </div>
+    </div>
+
+    <footer>
+      Submitted by <a href="mailto:kushagra.jaiswal@koinx.com">Kushagra Jaiswal</a> &copy; 2026. Made with ❤️ for the KoinX team.
+    </footer>
+  </div>
+</body>
+</html>`;
+  
+  res.setHeader('Content-Type', 'text/html');
+  res.status(200).send(html);
+}
+
 module.exports = {
   reconcile,
   getReport,
   getSummary,
-  getUnmatched
+  getUnmatched,
+  getRoot
 };
