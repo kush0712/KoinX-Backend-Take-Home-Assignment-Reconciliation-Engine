@@ -115,10 +115,14 @@ class MockExpressApp {
 let app;
 
 if (express) {
+  const controller = require('./controllers/reconcileController');
   app = express();
   app.use(express.json());
-  
-  // Register routes
+
+  // Root landing page — registered directly on app to guarantee it always works
+  app.get('/', controller.getRoot);
+
+  // Register all other API routes
   const reconcileRoutes = require('./routes/reconcileRoutes');
   app.use('/', reconcileRoutes);
   
