@@ -220,301 +220,369 @@ async function getUnmatched(req, res) {
   }
 }
 
-/**
- * Serve a beautiful welcome landing page for the root endpoint (GET /)
- */
 function getRoot(req, res) {
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KoinX Reconciliation Engine | Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Reconciliation Engine — KoinX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #090b11;
-      --card: #131722;
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --border: #374151;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --error: #ef4444;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #e2e2e2;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-      background-image: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.1) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+      padding: 3rem 1rem;
     }
 
-    .container {
-      max-width: 800px;
-      width: 100%;
-      background: rgba(19, 23, 34, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      padding: 3rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.35rem 1rem;
-      background: rgba(79, 70, 229, 0.15);
-      color: #818cf8;
-      border: 1px solid rgba(79, 70, 229, 0.3);
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      font-size: 2.25rem;
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      background: linear-gradient(to right, #ffffff, #9ca3af);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-    }
-
-    p.lead {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      line-height: 1.6;
-      max-width: 600px;
+    .page {
+      max-width: 720px;
       margin: 0 auto;
     }
 
-    .btn-container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 3rem;
+    /* Header */
+    .header { margin-bottom: 3rem; }
+    .header-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 0.75rem;
+    }
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .header p {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.6;
     }
 
-    .btn {
-      font-family: inherit;
-      background-color: var(--primary);
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 1rem 2.5rem;
+    /* Run section */
+    .run-section {
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      background: #111;
+    }
+    .run-section h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 1.25rem;
+    }
+    .run-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background: #fff;
+      color: #0a0a0a;
       border: none;
-      border-radius: 14px;
+      border-radius: 7px;
+      padding: 0.65rem 1.5rem;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+      transition: background 0.15s ease, opacity 0.15s ease;
     }
+    .run-btn:hover { background: #e2e2e2; }
+    .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .btn:hover {
-      background-color: var(--primary-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4);
+    .status-bar {
+      margin-top: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #555;
+      min-height: 1.2rem;
     }
+    .status-bar.ok { color: #4ade80; }
+    .status-bar.err { color: #f87171; }
+    .status-bar.loading { color: #888; }
 
-    .btn:active {
-      transform: translateY(0);
+    /* Result box */
+    .result-box {
+      margin-top: 1.25rem;
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: none;
     }
-
-    .endpoints {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 2rem;
-    }
-
-    h2 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: #ffffff;
-    }
-
-    .endpoint-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 16px;
-      padding: 1.25rem;
+    .result-box.show { display: block; }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
       margin-bottom: 1rem;
+    }
+    .stat { }
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 0.2rem;
+    }
+    .stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: #fff;
+    }
+    .run-id-row {
+      border-top: 1px solid #1e1e1e;
+      padding-top: 0.75rem;
+      font-size: 0.75rem;
+      color: #444;
+    }
+    .run-id-val {
+      font-family: 'JetBrains Mono', monospace;
+      color: #666;
+      word-break: break-all;
+    }
+
+    /* Endpoints */
+    .endpoints-section h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    .endpoint-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: background 0.2s ease;
-    }
-
-    .endpoint-card:hover {
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .method {
-      font-size: 0.8rem;
-      font-weight: 800;
-      padding: 0.25rem 0.65rem;
-      border-radius: 6px;
-      text-transform: uppercase;
-      margin-right: 1rem;
-      min-width: 65px;
-      text-align: center;
-      display: inline-block;
-    }
-
-    .method.post {
-      background: rgba(79, 70, 229, 0.15);
-      color: #818cf8;
-      border: 1px solid rgba(79, 70, 229, 0.3);
-    }
-
-    .method.get {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .route-info {
-      display: flex;
-      align-items: center;
-    }
-
-    .route-path {
-      font-family: monospace;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #ffffff;
-    }
-
-    .desc {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-    }
-
-    .action-link {
-      color: #818cf8;
+      padding: 1rem 1.25rem;
+      border: 1px solid #1e1e1e;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      background: #111;
       text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      transition: color 0.15s ease;
+      color: inherit;
+      transition: border-color 0.15s ease, background 0.15s ease;
+      cursor: default;
+      opacity: 0.4;
     }
-
-    .action-link:hover {
-      color: #a5b4fc;
-      text-decoration: underline;
+    .endpoint-row.active {
+      cursor: pointer;
+      opacity: 1;
     }
-
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      color: var(--text-muted);
+    .endpoint-row.active:hover {
+      border-color: #333;
+      background: #161616;
+    }
+    .ep-left { display: flex; align-items: center; gap: 0.75rem; }
+    .method-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      letter-spacing: 0.05em;
+    }
+    .ep-path {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.85rem;
+      color: #ccc;
+    }
+    .ep-desc {
+      font-size: 0.78rem;
+      color: #444;
+      margin-top: 0.15rem;
+    }
+    .ep-action {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #333;
+      white-space: nowrap;
+    }
+    .endpoint-row.active .ep-action { color: #666; }
+
+    /* Divider */
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      margin: 2rem 0;
     }
 
-    footer a {
-      color: #818cf8;
-      text-decoration: none;
+    /* Footer */
+    footer {
+      font-size: 0.75rem;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <span class="badge">KoinX Take-Home Assignment</span>
-      <h1>Reconciliation Engine Dashboard</h1>
-      <p class="lead">An institutional-grade, multi-phase matching and reconciliation API designed for crypto transaction histories.</p>
-    </header>
+  <div class="page">
 
-    <div class="btn-container">
-      <button class="btn" onclick="window.location.href='/reconcile'">🚀 Run Reconciliation Engine</button>
+    <div class="header">
+      <p class="header-tag">KoinX · Backend Assignment</p>
+      <h1>Transaction Reconciliation Engine</h1>
+      <p>Matches crypto transaction records from two sources, flags data quality issues, and generates a full reconciliation report.</p>
     </div>
 
-    <div class="endpoints">
-      <h2>Interactive REST Endpoints</h2>
-      
-      <div class="endpoint-card">
-        <div>
-          <div class="route-info">
-            <span class="method get">GET</span>
-            <span class="route-path">/reconcile</span>
-          </div>
-          <div class="desc">Triggers/runs matching engine & saves report to database. (Click below to test instantly!)</div>
-        </div>
-        <a class="action-link" href="/reconcile">Run now &rarr;</a>
-      </div>
+    <!-- Run Section -->
+    <div class="run-section">
+      <h2>Step 1 — Run Engine</h2>
+      <button class="run-btn" id="runBtn" onclick="runReconciliation()">Run Reconciliation</button>
+      <div class="status-bar" id="statusBar"></div>
 
-      <div class="endpoint-card">
-        <div>
-          <div class="route-info">
-            <span class="method get">GET</span>
-            <span class="route-path">/report/:runId</span>
+      <div class="result-box" id="resultBox">
+        <div class="result-grid">
+          <div class="stat">
+            <div class="stat-label">Matched</div>
+            <div class="stat-val" id="statMatched">—</div>
           </div>
-          <div class="desc">Streams downloadable CSV report mapping categories & details.</div>
-        </div>
-        <span class="desc">CSV Download</span>
-      </div>
-
-      <div class="endpoint-card">
-        <div>
-          <div class="route-info">
-            <span class="method get">GET</span>
-            <span class="route-path">/report/:runId/summary</span>
+          <div class="stat">
+            <div class="stat-label">Conflicting</div>
+            <div class="stat-val" id="statConflicting">—</div>
           </div>
-          <div class="desc">Fetches JSON containing counts (matched, conflicting, unmatched).</div>
-        </div>
-        <span class="desc">JSON Summary</span>
-      </div>
-
-      <div class="endpoint-card">
-        <div>
-          <div class="route-info">
-            <span class="method get">GET</span>
-            <span class="route-path">/report/:runId/unmatched</span>
+          <div class="stat">
+            <div class="stat-label">Unmatched (Exch.)</div>
+            <div class="stat-val" id="statUnmatched">—</div>
           </div>
-          <div class="desc">Retrieves detailed JSON of all unmatched transactions with reasons.</div>
+          <div class="stat">
+            <div class="stat-label">Invalid (User)</div>
+            <div class="stat-val" id="statInvalid">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Timestamp Tol.</div>
+            <div class="stat-val" id="statTs">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Qty Tolerance</div>
+            <div class="stat-val" id="statQty">—</div>
+          </div>
         </div>
-        <span class="desc">JSON List</span>
+        <div class="run-id-row">
+          Run ID: <span class="run-id-val" id="runIdDisplay">—</span>
+        </div>
       </div>
     </div>
 
-    <footer>
-      Submitted by <a href="mailto:kushagra.jaiswal@koinx.com">Kushagra Jaiswal</a> &copy; 2026. Made with ❤️ for the KoinX team.
-    </footer>
+    <!-- Endpoints Section -->
+    <div class="endpoints-section">
+      <h2>Step 2 — Explore Results</h2>
+
+      <a class="endpoint-row" id="epReport" href="#" target="_blank">
+        <div class="ep-left">
+          <span class="method-tag">GET</span>
+          <div>
+            <div class="ep-path">/report/:runId</div>
+            <div class="ep-desc">Download full reconciliation report as CSV</div>
+          </div>
+        </div>
+        <span class="ep-action">↓ CSV</span>
+      </a>
+
+      <a class="endpoint-row" id="epSummary" href="#" target="_blank">
+        <div class="ep-left">
+          <span class="method-tag">GET</span>
+          <div>
+            <div class="ep-path">/report/:runId/summary</div>
+            <div class="ep-desc">Fetch summary counts as JSON</div>
+          </div>
+        </div>
+        <span class="ep-action">→ JSON</span>
+      </a>
+
+      <a class="endpoint-row" id="epUnmatched" href="#" target="_blank">
+        <div class="ep-left">
+          <span class="method-tag">GET</span>
+          <div>
+            <div class="ep-path">/report/:runId/unmatched</div>
+            <div class="ep-desc">Fetch unmatched transactions with reasons as JSON</div>
+          </div>
+        </div>
+        <span class="ep-action">→ JSON</span>
+      </a>
+    </div>
+
+    <hr>
+    <footer>Submitted by Kushagra Jaiswal &middot; KoinX Backend Intern Assignment 2026</footer>
   </div>
+
+  <script>
+    async function runReconciliation() {
+      const btn = document.getElementById('runBtn');
+      const status = document.getElementById('statusBar');
+      const resultBox = document.getElementById('resultBox');
+
+      btn.disabled = true;
+      status.className = 'status-bar loading';
+      status.textContent = 'Running engine...';
+
+      try {
+        const res = await fetch('/reconcile');
+        const data = await res.json();
+
+        if (!res.ok || !data.runId) throw new Error(data.error || 'Unexpected response');
+
+        const runId = data.runId;
+        const s = data.summary;
+        const c = data.config;
+
+        // Populate stats
+        document.getElementById('statMatched').textContent = s.matched;
+        document.getElementById('statConflicting').textContent = s.conflicting;
+        document.getElementById('statUnmatched').textContent = s.unmatchedExchange + s.unmatchedUser;
+        document.getElementById('statInvalid').textContent = s.invalidUserRows;
+        document.getElementById('statTs').textContent = c.timestampToleranceSeconds + 's';
+        document.getElementById('statQty').textContent = c.quantityTolerancePct + '%';
+        document.getElementById('runIdDisplay').textContent = runId;
+
+        // Show result box
+        resultBox.classList.add('show');
+
+        // Enable and populate other endpoint links
+        const epReport = document.getElementById('epReport');
+        const epSummary = document.getElementById('epSummary');
+        const epUnmatched = document.getElementById('epUnmatched');
+
+        epReport.href = '/report/' + runId;
+        epSummary.href = '/report/' + runId + '/summary';
+        epUnmatched.href = '/report/' + runId + '/unmatched';
+
+        epReport.classList.add('active');
+        epSummary.classList.add('active');
+        epUnmatched.classList.add('active');
+
+        status.className = 'status-bar ok';
+        status.textContent = 'Done. Run ID: ' + runId;
+
+        btn.textContent = 'Run Again';
+        btn.disabled = false;
+
+      } catch (err) {
+        status.className = 'status-bar err';
+        status.textContent = 'Error: ' + err.message;
+        btn.disabled = false;
+      }
+    }
+  </script>
 </body>
 </html>`;
-  
+
   res.setHeader('Content-Type', 'text/html');
   res.status(200).send(html);
 }
-
 module.exports = {
   reconcile,
   getReport,
